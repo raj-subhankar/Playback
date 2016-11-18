@@ -12,6 +12,10 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
+import android.app.ProgressDialog;
+import android.graphics.PixelFormat;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.net.wifi.WifiManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,11 +26,16 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.MediaController;
 import android.widget.TextView;
 import android.widget.VideoView;
 
+import com.devbrackets.android.exomedia.ui.widget.EMVideoView;
+
 public class StreamingActivity extends ActionBarActivity {
     VideoView videoview;
+    EMVideoView emVideoView;
+    private static ProgressDialog progressDialog;
 
     private static final String TAG = "StreamingActivity";
 
@@ -36,14 +45,24 @@ public class StreamingActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_streaming);
 
-        videoview = (VideoView) findViewById(R.id.VideoView);
+//        videoview = (VideoView) findViewById(R.id.VideoView);
 
         new DownloadFileFromURL().execute("http://www.androidbegin.com/tutorial/AndroidCommercial.3gp");
         // Reading video path from sdcard
         String filePath = Environment.getExternalStorageDirectory().toString() + "/downloadedfile.3gp";
-        // setting downloaded video into view
-        videoview.setVideoPath(filePath);
-        videoview.start();
+
+//        MediaController vidControl = new MediaController(this);
+//        // setting downloaded video into view
+//        videoview.setVideoPath(filePath);
+////        videoview.setMediaController(vidControl);
+//        videoview.start();
+//        progressDialog = ProgressDialog.show(StreamingActivity.this, "", "Buffering video...", true);
+//        progressDialog.setCancelable(true);
+
+//        PlayVideo(filePath);
+
+        emVideoView = (EMVideoView) findViewById(R.id.video_view);
+        setupVideoView(filePath);
     }
 
     @Override
@@ -146,6 +165,55 @@ public class StreamingActivity extends ActionBarActivity {
         }
 
     }
+
+    private void PlayVideo(String url)
+    {
+        try
+        {
+            getWindow().setFormat(PixelFormat.TRANSLUCENT);
+            MediaController mediaController = new MediaController(StreamingActivity.this);
+            mediaController.setAnchorView(videoview);
+
+            Uri video = Uri.parse(url );
+            videoview.setMediaController(mediaController);
+            videoview.setVideoURI(video);
+            videoview.requestFocus();
+            videoview.setOnPreparedListener(new MediaPlayer.OnPreparedListener()
+            {
+
+                public void onPrepared(MediaPlayer mp)
+                {
+                    progressDialog.dismiss();
+                    videoview.start();
+                }
+            });
+
+
+        }
+        catch(Exception e)
+        {
+            progressDialog.dismiss();
+            System.out.println("Video Play Error :"+e.toString());
+            finish();
+        }
+
+    }
+
+    private void setupVideoView(String url) {
+        EMVideoView emVideoView = (EMVideoView)findViewById(R.id.video_view);
+//        emVideoView.setOnPreparedListener(this);
+
+        //For now we just picked an arbitrary item to play.  More can be found at
+        //https://archive.org/details/more_animation
+        emVideoView.setVideoURI(Uri.parse(url));
+    }
+
+//    @Override
+//    public void onPrepared() {
+//        //Starts the video playback as soon as it is ready
+//        emVideoView.start();
+//    }
+
 
 }
 

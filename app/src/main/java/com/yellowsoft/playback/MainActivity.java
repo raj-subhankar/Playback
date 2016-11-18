@@ -19,17 +19,6 @@ public class MainActivity extends Activity {
 
         // Locate the button in activity_main.xml
         button = (Button) findViewById(R.id.MyButton);
-
-        // Capture button clicks
-        button.setOnClickListener(new OnClickListener() {
-            public void onClick(View arg0) {
-
-                // Start NewActivity.class
-                Intent myIntent = new Intent(MainActivity.this,
-                        VideoViewActivity.class);
-                startActivity(myIntent);
-            }
-        });
     }
 
 }
