@@ -71,6 +71,8 @@ public class PlayerActivity extends Activity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_player);
 
+        mp4URL = getIntent().getStringExtra("url");
+
         new DownloadFileFromURL().execute(mp4URL);
         filePath = Environment.getExternalStorageDirectory().toString() + "/Playback/downloadedfile.mp4";
 
