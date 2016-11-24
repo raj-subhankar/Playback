@@ -8,6 +8,7 @@ import android.os.Environment;
 import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
@@ -49,7 +50,15 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < files.length; i++)
         {
             Log.d("Files", "FileName:" + files[i].getName());
+            Video v = new Video();
+            v.setTitle(files[i].getName());
+            videoList.add(v);
         }
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recycler.setLayoutManager(linearLayoutManager);
+        adapter = new CustomListAdapter(getApplicationContext(), videoList);
+        recycler.setAdapter(adapter);
 
         Button btnPasteUrl = (Button) findViewById(R.id.btnPaste);
         btnPasteUrl.setOnClickListener(new View.OnClickListener(){
