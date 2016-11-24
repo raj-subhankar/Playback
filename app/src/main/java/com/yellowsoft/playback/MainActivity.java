@@ -1,24 +1,43 @@
 package com.yellowsoft.playback;
 
+import android.os.Environment;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.app.Activity;
-import android.content.Intent;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
-public class MainActivity extends Activity {
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
-    Button button;
+public class MainActivity extends AppCompatActivity {
+    private CustomListAdapter adapter;
+    private ArrayList<Video> videoList = new ArrayList<Video>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // Get the layout from video_main.xml
         setContentView(R.layout.activity_main);
 
-        // Locate the button in activity_main.xml
-        button = (Button) findViewById(R.id.MyButton);
-    }
+        RecyclerView recycler = (RecyclerView) findViewById(R.id.list);
+        adapter = new CustomListAdapter(getApplicationContext(), videoList);
+        recycler.setAdapter(adapter);
 
+        File folder = new File(Environment.getExternalStorageDirectory() +
+                File.separator + "Playback");
+        boolean success = true;
+        if (!folder.exists()) {
+            success = folder.mkdirs();
+        }
+
+        String path = Environment.getExternalStorageDirectory().toString()+"/Playback";
+        Log.d("Files", "Path: " + path);
+        File directory = new File(path);
+        File[] files = directory.listFiles();
+        Log.d("Files", "Size: "+ files.length);
+        for (int i = 0; i < files.length; i++)
+        {
+            Log.d("Files", "FileName:" + files[i].getName());
+        }
+    }
 }
