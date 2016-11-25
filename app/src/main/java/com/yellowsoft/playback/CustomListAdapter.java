@@ -81,7 +81,11 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
 
         final int viewId = view.getId();
         if(viewId == R.id.listrow) {
-
+            Intent i = new Intent(context,
+                    PlayerActivity.class);
+            i.putExtra("url", Environment.getExternalStorageDirectory().toString() + "/Playback/"+ videoList.get(position).getTitle());
+            i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            context.startActivity(i);
         }
     }
 }
