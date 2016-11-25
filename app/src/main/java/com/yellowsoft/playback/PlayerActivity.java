@@ -29,6 +29,7 @@ import com.google.android.exoplayer.upstream.DefaultAllocator;
 import com.google.android.exoplayer.upstream.DefaultUriDataSource;
 
 import java.io.BufferedInputStream;
+import java.io.File;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -65,7 +66,7 @@ public class PlayerActivity extends Activity  {
     private String HLSurl = "http://walterebert.com/playground/video/hls/sintel-trailer.m3u8";
     private String mp4URL = "http://www.sample-videos.com/video/mp4/480/big_buck_bunny_480p_5mb.mp4";
     private String userAgent = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10.11; rv:40.0) Gecko/20100101 Firefox/40.0";
-    String filePath;
+    String filePath, name;
 
 
     @Override
@@ -75,8 +76,16 @@ public class PlayerActivity extends Activity  {
 
         mp4URL = getIntent().getStringExtra("url");
 
-        new DownloadFileFromURL().execute(mp4URL);
-        filePath = Environment.getExternalStorageDirectory().toString() + "/Playback/downloadedfile.mp4";
+        String name = URLUtil.guessFileName(mp4URL.toString(), null, null);
+
+        File video = new File(Environment.getExternalStorageDirectory() +
+                File.separator + "Playback" + name);
+        if (!video.exists()) {
+            new DownloadFileFromURL().execute(mp4URL);
+        }
+
+        filePath = Environment.getExternalStorageDirectory().toString() + "/Playback/"+name;
+
 
         surfaceView = (SurfaceView) findViewById(R.id.sv_player);
         mediaController = (LinearLayout) findViewById(R.id.lin_media_controller);
@@ -103,22 +112,22 @@ public class PlayerActivity extends Activity  {
         initSeekBar();
         initTxtTime();
         initFwd();
-        initPrev();
+//        initPrev();
         initRew();
-        initNext();
+//        initNext();
 
     }
 
-    private void initNext() {
-        btnNext = (ImageButton) findViewById(R.id.next);
-        btnNext.requestFocus();
-        btnNext.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                exoPlayer.seekTo(exoPlayer.getDuration());
-            }
-        });
-    }
+//    private void initNext() {
+//        btnNext = (ImageButton) findViewById(R.id.next);
+//        btnNext.requestFocus();
+//        btnNext.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                exoPlayer.seekTo(exoPlayer.getDuration());
+//            }
+//        });
+//    }
 
     private void initRew() {
         btnRew = (ImageButton) findViewById(R.id.rew);
@@ -131,18 +140,18 @@ public class PlayerActivity extends Activity  {
         });
     }
 
-    private void initPrev() {
-        btnPrev = (ImageButton) findViewById(R.id.prev);
-        btnPrev.requestFocus();
-        btnPrev.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                exoPlayer.seekTo(0);
-            }
-        });
-
-
-    }
+//    private void initPrev() {
+//        btnPrev = (ImageButton) findViewById(R.id.prev);
+//        btnPrev.requestFocus();
+//        btnPrev.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                exoPlayer.seekTo(0);
+//            }
+//        });
+//
+//
+//    }
 
 
     private void initFwd() {
@@ -298,7 +307,7 @@ public class PlayerActivity extends Activity  {
         Allocator allocator = new DefaultAllocator(minBufferMs);
         DataSource dataSource = new DefaultUriDataSource(this, null, userAgent);
 
-        ExtractorSampleSource sampleSource = new ExtractorSampleSource( Uri.parse(mp4URL), dataSource, allocator,
+        ExtractorSampleSource sampleSource = new ExtractorSampleSource( Uri.parse(filePath), dataSource, allocator,
                 BUFFER_SEGMENT_COUNT * BUFFER_SEGMENT_SIZE);
 
         MediaCodecVideoTrackRenderer videoRenderer = new
@@ -349,7 +358,7 @@ public class PlayerActivity extends Activity  {
                 InputStream input = new BufferedInputStream(url.openStream(), 8192);
 
 //                String fileExtenstion = MimeTypeMap.getFileExtensionFromUrl(url.toString());
-                String name = URLUtil.guessFileName(url.toString(), null, null);
+//                String name = URLUtil.guessFileName(url.toString(), null, null);
 
                 // Output stream to write file
                 OutputStream output = new FileOutputStream("/sdcard/Playback/"+ name);

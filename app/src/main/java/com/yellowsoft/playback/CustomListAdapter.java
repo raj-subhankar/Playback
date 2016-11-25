@@ -2,12 +2,15 @@ package com.yellowsoft.playback;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Environment;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
@@ -19,7 +22,7 @@ import java.util.List;
  * Created by subhankar on 11/23/2016.
  */
 
-public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.MyViewHolder> {
+public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.MyViewHolder> implements View.OnClickListener {
 
     private Context context;
     ArrayList<Video> videoList;
@@ -32,11 +35,13 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
     public class MyViewHolder extends RecyclerView.ViewHolder {
         public TextView title;
         public ImageView thumbnail;
+        public RelativeLayout listRow;
 
         public MyViewHolder(View view) {
             super(view);
             title = (TextView) view.findViewById(R.id.title);
             thumbnail = (ImageView) view.findViewById(R.id.thumbnail);
+            listRow = (RelativeLayout) view.findViewById(R.id.listrow);
         }
     }
 
@@ -45,6 +50,7 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
         View itemView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.list_row, parent, false);
         MyViewHolder myViewHolder = new MyViewHolder(itemView);
+        myViewHolder.listRow.setOnClickListener(this);
 
         return myViewHolder;
     }
@@ -54,6 +60,7 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
         Video video = videoList.get(position);
         String title = video.getTitle();
         holder.title.setText(title);
+        holder.listRow.setTag(holder);
 
         if(video.getThumbnailUrl() != "") {
             Picasso.with(context).load(R.drawable.ic_video_icon).into(holder.thumbnail);
@@ -65,5 +72,16 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
     @Override
     public int getItemCount() {
         return videoList.size();
+    }
+
+    @Override
+    public void onClick(View view) {
+        MyViewHolder holder = (MyViewHolder) view.getTag();
+        Integer position = holder.getAdapterPosition();
+
+        final int viewId = view.getId();
+        if(viewId == R.id.listrow) {
+
+        }
     }
 }

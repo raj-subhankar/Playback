@@ -67,6 +67,14 @@ public class MainActivity extends AppCompatActivity {
                 onClickButtonPasteToUrlField(view);
             }
         });
+
+        Button btnReset = (Button) findViewById(R.id.btnReset);
+        btnReset.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view){
+                editTextUrl.setText("");
+            }
+        });
     }
 
     public void onClickButtonPasteToUrlField(View v) {

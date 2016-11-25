@@ -12,8 +12,8 @@
         android:paddingTop="4dip"
         android:orientation="horizontal">
 
-        <ImageButton android:id="@+id/prev"
-            style="@android:style/MediaButton.Previous"
+        <!--<ImageButton android:id="@+id/prev"-->
+            <!--style="@android:style/MediaButton.Previous"-->
             />
 
         <ImageButton android:id="@+id/rew"
@@ -28,8 +28,8 @@
             style="@android:style/MediaButton.Ffwd"
             />
 
-        <ImageButton android:id="@+id/next"
-            style="@android:style/MediaButton.Next"
+        <!--<ImageButton android:id="@+id/next"-->
+            <!--style="@android:style/MediaButton.Next"-->
             />
 
     </LinearLayout>

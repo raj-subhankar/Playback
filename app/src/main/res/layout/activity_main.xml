@@ -31,14 +31,14 @@
         android:layout_alignParentStart="true">
 
         <Button
-            android:text="Reset"
+            android:text="Reset URL"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnReset"
             android:layout_weight="1" />
 
         <Button
-            android:text="Paste"
+            android:text="Paste URL"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/btnPaste"
