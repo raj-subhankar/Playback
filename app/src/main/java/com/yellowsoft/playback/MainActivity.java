@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     private CustomListAdapter adapter;
     private ArrayList<Video> videoList = new ArrayList<Video>();
     EditText editTextUrl;
+    RecyclerView recycler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,7 +32,7 @@ public class MainActivity extends AppCompatActivity {
 
         editTextUrl = (EditText) findViewById(R.id.etUrl);
 
-        RecyclerView recycler = (RecyclerView) findViewById(R.id.list);
+        recycler = (RecyclerView) findViewById(R.id.list);
         adapter = new CustomListAdapter(getApplicationContext(), videoList);
         recycler.setAdapter(adapter);
 
@@ -42,23 +43,7 @@ public class MainActivity extends AppCompatActivity {
             success = folder.mkdirs();
         }
 
-        String path = Environment.getExternalStorageDirectory().toString()+"/Playback";
-        Log.d("Files", "Path: " + path);
-        File directory = new File(path);
-        File[] files = directory.listFiles();
-        Log.d("Files", "Size: "+ files.length);
-        for (int i = 0; i < files.length; i++)
-        {
-            Log.d("Files", "FileName:" + files[i].getName());
-            Video v = new Video();
-            v.setTitle(files[i].getName());
-            videoList.add(v);
-        }
-
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
-        recycler.setLayoutManager(linearLayoutManager);
-        adapter = new CustomListAdapter(getApplicationContext(), videoList);
-        recycler.setAdapter(adapter);
+        updateVideoList();
 
         Button btnPasteUrl = (Button) findViewById(R.id.btnPaste);
         btnPasteUrl.setOnClickListener(new View.OnClickListener(){
@@ -77,6 +62,27 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    private void updateVideoList() {
+        videoList.clear();
+        String path = Environment.getExternalStorageDirectory().toString()+"/Playback";
+        Log.d("Files", "Path: " + path);
+        File directory = new File(path);
+        File[] files = directory.listFiles();
+        Log.d("Files", "Size: "+ files.length);
+        for (int i = 0; i < files.length; i++)
+        {
+            Log.d("Files", "FileName:" + files[i].getName());
+            Video v = new Video();
+            v.setTitle(files[i].getName());
+            videoList.add(v);
+        }
+
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getApplicationContext());
+        recycler.setLayoutManager(linearLayoutManager);
+        adapter = new CustomListAdapter(getApplicationContext(), videoList);
+        recycler.setAdapter(adapter);
+    }
+
     public void onClickButtonPasteToUrlField(View v) {
         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
         if (cm.hasPrimaryClip()) {
@@ -91,15 +97,21 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(intent);
             } else {
                 Log.e("asd", "not text");
-                //makeToast("Unable to paste non-text data. Please copy from Instagram again.");
+                //makeToast("Unable to paste non-text data. Please copy again.");
                 Snackbar.make(v, "Unable to paste non-text data. Please copy from Instagram again.", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         } else {
             Log.e("asd", "nothing to paste");
-            //makeToast("Clipboard is empty. Please copy from Instagram again.");
+            //makeToast("Clipboard is empty. Please copy again.");
             Snackbar.make(v, "Clipboard is empty. Please copy from Instagram again.", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
         }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        updateVideoList();
     }
 }

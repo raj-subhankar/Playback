@@ -76,10 +76,10 @@ public class PlayerActivity extends Activity  {
 
         mp4URL = getIntent().getStringExtra("url");
 
-        String name = URLUtil.guessFileName(mp4URL.toString(), null, null);
+        name = URLUtil.guessFileName(mp4URL.toString(), null, null);
 
         File video = new File(Environment.getExternalStorageDirectory() +
-                File.separator + "Playback" + name);
+                File.separator + "Playback" + File.separator + name);
         if (!video.exists()) {
             new DownloadFileFromURL().execute(mp4URL);
         }
@@ -307,7 +307,7 @@ public class PlayerActivity extends Activity  {
         Allocator allocator = new DefaultAllocator(minBufferMs);
         DataSource dataSource = new DefaultUriDataSource(this, null, userAgent);
 
-        ExtractorSampleSource sampleSource = new ExtractorSampleSource( Uri.parse(filePath), dataSource, allocator,
+        ExtractorSampleSource sampleSource = new ExtractorSampleSource( Uri.parse(mp4URL), dataSource, allocator,
                 BUFFER_SEGMENT_COUNT * BUFFER_SEGMENT_SIZE);
 
         MediaCodecVideoTrackRenderer videoRenderer = new
