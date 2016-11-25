@@ -56,9 +56,9 @@ public class CustomListAdapter extends RecyclerView.Adapter<CustomListAdapter.My
         holder.title.setText(title);
 
         if(video.getThumbnailUrl() != "") {
-            Picasso.with(context).load(video.getThumbnailUrl()).into(holder.thumbnail);
+            Picasso.with(context).load(R.drawable.ic_video_icon).into(holder.thumbnail);
         } else {
-            holder.thumbnail.setVisibility(View.INVISIBLE);
+            Picasso.with(context).load(R.drawable.ic_video_icon).into(holder.thumbnail);
         }
     }
 

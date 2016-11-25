@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.WindowManager;
+import android.webkit.MimeTypeMap;
+import android.webkit.URLUtil;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.SeekBar;
@@ -296,7 +298,7 @@ public class PlayerActivity extends Activity  {
         Allocator allocator = new DefaultAllocator(minBufferMs);
         DataSource dataSource = new DefaultUriDataSource(this, null, userAgent);
 
-        ExtractorSampleSource sampleSource = new ExtractorSampleSource( Uri.parse(filePath), dataSource, allocator,
+        ExtractorSampleSource sampleSource = new ExtractorSampleSource( Uri.parse(mp4URL), dataSource, allocator,
                 BUFFER_SEGMENT_COUNT * BUFFER_SEGMENT_SIZE);
 
         MediaCodecVideoTrackRenderer videoRenderer = new
@@ -346,8 +348,11 @@ public class PlayerActivity extends Activity  {
                 // input stream to read file - with 8k buffer
                 InputStream input = new BufferedInputStream(url.openStream(), 8192);
 
+//                String fileExtenstion = MimeTypeMap.getFileExtensionFromUrl(url.toString());
+                String name = URLUtil.guessFileName(url.toString(), null, null);
+
                 // Output stream to write file
-                OutputStream output = new FileOutputStream("/sdcard/Playback/downloadedfile.mp4");
+                OutputStream output = new FileOutputStream("/sdcard/Playback/"+ name);
 
                 byte data[] = new byte[1024];
 
